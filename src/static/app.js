@@ -89,6 +89,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Function to unregister participant
+  function unregisterParticipant(event) {
+    const participantItem = event.target.parentElement;
+    participantItem.remove(); // Remove the participant from the list
+  }
+
+  // Add event listener to delete buttons
+  activitiesList.addEventListener('click', (event) => {
+    if (event.target.classList.contains('delete-btn')) {
+      unregisterParticipant(event);
+    }
+  });
+
   // Initialize app
   fetchActivities();
 });
