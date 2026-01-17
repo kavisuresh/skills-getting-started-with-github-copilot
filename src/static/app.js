@@ -20,11 +20,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        const participantsList = details.participants.length > 0
+          ? `<ul class="participants-list">${details.participants.map(p => `<li>${p}</li>`).join("")}</ul>`
+          : "<p class=\"no-participants\">No participants yet</p>";
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <strong>Participants:</strong>
+            ${participantsList}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -62,6 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        // Refresh activities to show the new participant
+        fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";
@@ -78,6 +88,19 @@ document.addEventListener("DOMContentLoaded", () => {
       messageDiv.className = "error";
       messageDiv.classList.remove("hidden");
       console.error("Error signing up:", error);
+    }
+  });
+
+  // Function to unregister participant
+  function unregisterParticipant(event) {
+    const participantItem = event.target.parentElement;
+    participantItem.remove(); // Remove the participant from the list
+  }
+
+  // Add event listener to delete buttons
+  activitiesList.addEventListener('click', (event) => {
+    if (event.target.classList.contains('delete-btn')) {
+      unregisterParticipant(event);
     }
   });
 
